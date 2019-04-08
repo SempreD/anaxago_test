@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h1 class="my-5">Découvrez nos opportunités d'investissement</h1>
+            Statut : <a href="{{ url('anaxago_core_homepage_statut', {statut: 'financé'}) }}">Financé</a> |
+            <a href="{{ url('anaxago_core_homepage_statut', {statut: 'non-financé'}) }}">Non financé</a>
+            {% if app.user %}
+                | <a href="{{ url('anaxago_core_homepage_interet') }}">Intêret</a>
+            {% endif %}
+            {% for project in projects %}
+                {% if loop.first or loop.index0 % 3 == 0 %}
+                    <div class="row">
+                {% endif %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top" src="https://picsum.photos/360/240/?random" alt="project">
+                        <div class="card-body">
+                            <h5>{{ project.title }}</h5>
+                            <p class="card-text">
+                                {{ project.description }}
+                                {% if project.statut is not empty and project.statut == 'financé' %}
+                                    {% set statut = project.statut %}
+                                    {% set color = 'bg-primary' %}
+                                {% else %}
+                                    {% set statut = 'non-financé' %}
+                                    {% set color = 'bg-secondary' %}
+                                    {% if app.user %}
+                                        <p class="row">
+                                                <a class="btn btn-warning col-sm" href="{{ url('anaxago_core_project_show', {id: project.id}) }}">Voir le produit</a> &nbsp;
+                                                <a class="btn btn-light col-sm" data-toggle="modal" data-target="#interest" data-url="{{ url('anaxago_core_project_montant', {id:project.id}) }}">♥</a>
+                                        </p>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="row p-3 {{ color }} text-white">{{ statut | capitalize }}</div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% if not loop.first and (loop.last or loop.index % 3 == 0 ) %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="modal fade" id="interest" tabindex="-1" role="dialog" aria-labelledby="interestlabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="interestlabel">Marque d'intêret</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-full-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script language="JavaScript">
+        (function($) {
+            $('#interest').on('show.bs.modal', function (event) {
+                var self = this;
+                var button = $(event.relatedTarget);
+                var url = $(button).data('url');
+                $.ajax({
+                    method: "get",
+                    url: url,
+                    dataType: "html",
+                }).done(function (response) {
+                    $(self).find('.modal-full-body').html(response);
+                }).fail(function (jxh, textmsg, errorThrown) {
+                    console.log(textmsg);
+                    console.log(errorThrown);
+                });
+            })
+        }) (jQuery);
+    </script>
+{% endblock %}

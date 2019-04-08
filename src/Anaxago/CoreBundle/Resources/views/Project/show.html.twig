@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h1 class="my-5">{{ project.title }}</h1>
+            <div class="row">
+                <img src="https://picsum.photos/360/240/?random" width="410px" />
+            </div>
+            <br>
+            <p class="row h3 axc-text-dark-blue">
+                <span>{{ project.description }}</span>
+            </p>
+            <br />
+            <div class="card row">
+                <div class="card-body">
+                    <h5 class="card-title">Le projet</h5>
+                    <p class="card-text"></p>
+                    {% set statut = 'non-financé' %}
+                    {% if project.statut is not empty %}
+                        {% set statut = project.statut %}
+                    {% endif %}
+                    <span class="btn btn-primary">{{ statut }}</span>
+                    <br />
+                    Seuil de financement : {{ project.montant }} sur {{ project.seuilDeFinancement }} euros
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

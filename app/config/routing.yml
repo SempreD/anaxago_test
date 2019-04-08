@@ -1,0 +1,19 @@
+core:
+    resource: '@AnaxagoCoreBundle/Controller/'
+    type:     annotation
+
+api:
+    resource: '@AnaxagoApiBundle/Controller/'
+    type:     annotation
+    prefix: /api
+
+login:
+    path: /login
+    defaults: { _controller: AnaxagoCoreBundle:Security:login }
+
+logout:
+    path: /logout
+
+anaxago_core_registration:
+    path: /register
+    defaults: { _controller: AnaxagoCoreBundle:Security:registration }

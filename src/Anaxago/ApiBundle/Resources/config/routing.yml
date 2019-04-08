@@ -1,0 +1,3 @@
+anaxago_api_homepage:
+    path:     /
+    defaults: { _controller: AnaxagoApiBundle:Default:index }
